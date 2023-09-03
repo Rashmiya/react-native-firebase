@@ -1,4 +1,5 @@
-import {StyleSheet, Text, View} from 'react-native';
+/* eslint-disable react-native/no-inline-styles */
+import {ActivityIndicator, Alert, StyleSheet, Text, View} from 'react-native';
 import React, {useState} from 'react';
 import {
   Button,
@@ -7,17 +8,38 @@ import {
   Link,
   NativeBaseProvider,
 } from 'native-base';
+import {firebase_auth} from '../../firebaseConfig';
+import {signInWithEmailAndPassword} from 'firebase/auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SignInPage = ({navigation}: any) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const auth = firebase_auth;
 
   function openSignUpModel(): any {
     navigation.navigate('SignUpPage');
   }
 
-  function signInOnAction(): void {
-    console.log('done');
+  async function signInOnAction(): Promise<void> {
+    setLoading(true);
+    try {
+      const response = await signInWithEmailAndPassword(auth, email, password);
+      console.log(response);
+      await AsyncStorage.setItem('userEmail', email);
+      navigation.navigate('CharacterList');
+      clearFields;
+    } catch (error: any) {
+      console.log(error);
+      Alert.alert('sign in faild : ' + error.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+  function clearFields() {
+    setEmail('');
+    setPassword('');
   }
 
   return (
@@ -67,13 +89,19 @@ const SignInPage = ({navigation}: any) => {
                 Forgot Password?
               </Link>
             </FormControl>
-            <Button
-              mt="2"
-              style={styles.signInBtn}
-              borderRadius={10}
-              onPress={() => signInOnAction()}>
-              <Text style={styles.signInBtnTxt}>Sign in</Text>
-            </Button>
+            {loading ? (
+              <ActivityIndicator size={'large'} color={'#0000ff'} />
+            ) : (
+              <>
+                <Button
+                  mt="2"
+                  style={styles.signInBtn}
+                  borderRadius={10}
+                  onPress={() => signInOnAction()}>
+                  <Text style={styles.signInBtnTxt}>Sign in</Text>
+                </Button>
+              </>
+            )}
 
             <View style={styles.signUpTxtArea}>
               <Text style={styles.signUpTxt}>Don't have an account.</Text>
