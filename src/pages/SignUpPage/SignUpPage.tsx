@@ -1,4 +1,11 @@
-import {ActivityIndicator, Alert, StyleSheet, Text, View} from 'react-native';
+import {
+  ActivityIndicator,
+  Alert,
+  KeyboardAvoidingView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import React, {useState} from 'react';
 import {
   Button,
@@ -11,6 +18,7 @@ import {createUserWithEmailAndPassword} from 'firebase/auth';
 import {firebase_auth, firestore_db} from '../../firebaseConfig';
 import {addDoc, collection} from 'firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Platform } from 'react-native';
 
 const SignUpPage = ({navigation}: any) => {
   const [name, setName] = useState('');
@@ -65,99 +73,105 @@ const SignUpPage = ({navigation}: any) => {
 
   return (
     <NativeBaseProvider>
-      <View style={styles.layout}>
-        <Text style={styles.text}>My App</Text>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'android' ? 'padding' : 'height'}
+        style={styles.container}>
+        <View style={styles.layout}>
+          <KeyboardAvoidingView behavior="padding">
+            <Text style={styles.text}>My App</Text>
 
-        {/* sign up model area */}
-        <View style={styles.modalView}>
-          <View style={styles.signUpInputArea}>
-            <FormControl>
-              <FormControl.Label>Name</FormControl.Label>
-              <Input
-                style={styles.inputStyle}
-                size="md"
-                value={name}
-                placeholder=" Jhone cammilus"
-                onChangeText={e => {
-                  setName(e);
-                }}
-                borderColor={'#4b5563'}
-                borderRadius={10}
-              />
-            </FormControl>
-            <FormControl>
-              <FormControl.Label>Email</FormControl.Label>
-              <Input
-                style={styles.inputStyle}
-                size="md"
-                value={email}
-                placeholder=" example@abc.com"
-                onChangeText={e => {
-                  setEmail(e);
-                }}
-                borderColor={'#4b5563'}
-                borderRadius={10}
-              />
-            </FormControl>
-            <FormControl>
-              <FormControl.Label>Password</FormControl.Label>
-              <Input
-                style={styles.inputStyle}
-                size="md"
-                value={password}
-                type="password"
-                placeholder=" password"
-                onChangeText={e => {
-                  setPassword(e);
-                }}
-                borderColor={'#4b5563'}
-                borderRadius={10}
-              />
-            </FormControl>
-            <FormControl>
-              <FormControl.Label>Confirm Password</FormControl.Label>
-              <Input
-                style={styles.inputStyle}
-                size="md"
-                type="password"
-                value={confirmPassword}
-                placeholder=" Confirm password"
-                onChangeText={e => {
-                  setConfirmPassword(e);
-                }}
-                borderColor={'#4b5563'}
-                borderRadius={10}
-              />
-            </FormControl>
+            {/* sign up model area */}
+            <View style={styles.modalView}>
+              <View style={styles.signUpInputArea}>
+                <FormControl>
+                  <FormControl.Label>Name</FormControl.Label>
+                  <Input
+                    style={styles.inputStyle}
+                    size="md"
+                    value={name}
+                    placeholder=" Jhone cammilus"
+                    onChangeText={e => {
+                      setName(e);
+                    }}
+                    borderColor={'#4b5563'}
+                    borderRadius={10}
+                  />
+                </FormControl>
+                <FormControl>
+                  <FormControl.Label>Email</FormControl.Label>
+                  <Input
+                    style={styles.inputStyle}
+                    size="md"
+                    value={email}
+                    placeholder=" example@abc.com"
+                    onChangeText={e => {
+                      setEmail(e);
+                    }}
+                    borderColor={'#4b5563'}
+                    borderRadius={10}
+                  />
+                </FormControl>
+                <FormControl>
+                  <FormControl.Label>Password</FormControl.Label>
+                  <Input
+                    style={styles.inputStyle}
+                    size="md"
+                    value={password}
+                    type="password"
+                    placeholder=" password"
+                    onChangeText={e => {
+                      setPassword(e);
+                    }}
+                    borderColor={'#4b5563'}
+                    borderRadius={10}
+                  />
+                </FormControl>
+                <FormControl>
+                  <FormControl.Label>Confirm Password</FormControl.Label>
+                  <Input
+                    style={styles.inputStyle}
+                    size="md"
+                    type="password"
+                    value={confirmPassword}
+                    placeholder=" Confirm password"
+                    onChangeText={e => {
+                      setConfirmPassword(e);
+                    }}
+                    borderColor={'#4b5563'}
+                    borderRadius={10}
+                  />
+                </FormControl>
 
-            {loading ? (
-              <ActivityIndicator size={'large'} color={'#0000ff'} />
-            ) : (
-              <>
-                <Button
-                  mt="2"
-                  style={styles.signUpBtn}
-                  borderRadius={10}
-                  onPress={() => signUpOnAction()}>
-                  <Text style={styles.signUpBtnTxt}>Sign up</Text>
-                </Button>
-              </>
-            )}
-            <View style={styles.signUpTxtArea}>
-              <Text style={styles.signUpTxt}>Have an account.</Text>
-              <Link
-                _text={{
-                  fontSize: '16',
-                  color: '#F9C86A',
-                  top: 2,
-                }}
-                onPress={() => openSignInModel()}>
-                Sign in
-              </Link>
+                {loading ? (
+                  <ActivityIndicator size={'large'} color={'#0000ff'} />
+                ) : (
+                  <>
+                    <Button
+                      mt="2"
+                      style={styles.signUpBtn}
+                      borderRadius={10}
+                      onPress={() => signUpOnAction()}>
+                      <Text style={styles.signUpBtnTxt}>Sign up</Text>
+                    </Button>
+                  </>
+                )}
+                <View style={styles.signUpTxtArea}>
+                  <Text style={styles.signUpTxt}>Have an account.</Text>
+                  <Link
+                    _text={{
+                      fontSize: '16',
+                      color: '#F9C86A',
+                      top: 2,
+                    }}
+                    onPress={() => openSignInModel()}>
+                    Sign in
+                  </Link>
+                </View>
+              </View>
             </View>
-          </View>
+          </KeyboardAvoidingView>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </NativeBaseProvider>
   );
 };
@@ -165,6 +179,11 @@ const SignUpPage = ({navigation}: any) => {
 export default SignUpPage;
 
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#2a2a2a',
+    position: 'absolute',
+    width: '100%',
+  },
   text: {
     color: 'white',
     fontWeight: 'bold',

@@ -1,5 +1,11 @@
-/* eslint-disable react-native/no-inline-styles */
-import {ActivityIndicator, Alert, StyleSheet, Text, View} from 'react-native';
+import {
+  ActivityIndicator,
+  Alert,
+  KeyboardAvoidingView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import React, {useState} from 'react';
 import {
   Button,
@@ -11,6 +17,7 @@ import {
 import {firebase_auth} from '../../firebaseConfig';
 import {signInWithEmailAndPassword} from 'firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Platform} from 'react-native';
 
 const SignInPage = ({navigation}: any) => {
   const [email, setEmail] = useState('');
@@ -44,80 +51,84 @@ const SignInPage = ({navigation}: any) => {
 
   return (
     <NativeBaseProvider>
-      <View style={styles.layout}>
-        <Text style={styles.text}>My App</Text>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'android' ? 'padding' : 'height'}
+        style={styles.container}>
+        <View style={styles.layout}>
+          <Text style={styles.text}>My App</Text>
 
-        {/* sign in model area */}
-        <View style={styles.modalView}>
-          <View style={styles.signInInputArea}>
-            <FormControl>
-              <FormControl.Label>Email</FormControl.Label>
-              <Input
-                style={styles.inputStyle}
-                size="md"
-                value={email}
-                placeholder=" example@abc.com"
-                borderColor={'#4b5563'}
-                borderRadius={10}
-                onChangeText={e => {
-                  setEmail(e);
-                }}
-              />
-            </FormControl>
-            <FormControl>
-              <FormControl.Label>Password</FormControl.Label>
-              <Input
-                style={styles.inputStyle}
-                size="md"
-                type="password"
-                value={password}
-                placeholder=" password"
-                borderColor={'#4b5563'}
-                borderRadius={10}
-                onChangeText={e => {
-                  setPassword(e);
-                }}
-              />
-              <Link
-                _text={{
-                  fontSize: 'xs',
-                  fontWeight: '500',
-                  color: 'white',
-                }}
-                alignSelf="flex-end"
-                mt="1">
-                Forgot Password?
-              </Link>
-            </FormControl>
-            {loading ? (
-              <ActivityIndicator size={'large'} color={'#0000ff'} />
-            ) : (
-              <>
-                <Button
-                  mt="2"
-                  style={styles.signInBtn}
+          {/* sign in model area */}
+          <View style={styles.modalView}>
+            <View style={styles.signInInputArea}>
+              <FormControl>
+                <FormControl.Label>Email</FormControl.Label>
+                <Input
+                  style={styles.inputStyle}
+                  size="md"
+                  value={email}
+                  placeholder=" example@abc.com"
+                  borderColor={'#4b5563'}
                   borderRadius={10}
-                  onPress={() => signInOnAction()}>
-                  <Text style={styles.signInBtnTxt}>Sign in</Text>
-                </Button>
-              </>
-            )}
+                  onChangeText={e => {
+                    setEmail(e);
+                  }}
+                />
+              </FormControl>
+              <FormControl>
+                <FormControl.Label>Password</FormControl.Label>
+                <Input
+                  style={styles.inputStyle}
+                  size="md"
+                  type="password"
+                  value={password}
+                  placeholder=" password"
+                  borderColor={'#4b5563'}
+                  borderRadius={10}
+                  onChangeText={e => {
+                    setPassword(e);
+                  }}
+                />
+                <Link
+                  _text={{
+                    fontSize: 'xs',
+                    fontWeight: '500',
+                    color: '#b9b7b7',
+                  }}
+                  alignSelf="flex-end"
+                  mt="1">
+                  Forgot Password?
+                </Link>
+              </FormControl>
+              {loading ? (
+                <ActivityIndicator size={'large'} color={'#0000ff'} />
+              ) : (
+                <>
+                  <Button
+                    mt="2"
+                    style={styles.signInBtn}
+                    borderRadius={10}
+                    onPress={() => signInOnAction()}>
+                    <Text style={styles.signInBtnTxt}>Sign in</Text>
+                  </Button>
+                </>
+              )}
 
-            <View style={styles.signUpTxtArea}>
-              <Text style={styles.signUpTxt}>Don't have an account.</Text>
-              <Link
-                _text={{
-                  fontSize: '16',
-                  color: '#F9C86A',
-                  top: 200,
-                }}
-                onPress={() => openSignUpModel()}>
-                Sign up
-              </Link>
+              <View style={styles.signUpTxtArea}>
+                <Text style={styles.signUpTxt}>Don't have an account.</Text>
+                <Link
+                  _text={{
+                    fontSize: '16',
+                    color: '#F9C86A',
+                    top: 200,
+                  }}
+                  onPress={() => openSignUpModel()}>
+                  Sign up
+                </Link>
+              </View>
             </View>
           </View>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </NativeBaseProvider>
   );
 };
@@ -125,6 +136,11 @@ const SignInPage = ({navigation}: any) => {
 export default SignInPage;
 
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#2a2a2a',
+    position: 'absolute',
+    width: '100%',
+  },
   text: {
     color: 'white',
     fontWeight: 'bold',
