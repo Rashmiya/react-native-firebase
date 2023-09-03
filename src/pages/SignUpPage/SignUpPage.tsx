@@ -149,7 +149,7 @@ const SignUpPage = ({navigation}: any) => {
                 _text={{
                   fontSize: '16',
                   color: '#F9C86A',
-                  top: 150,
+                  top: 2,
                 }}
                 onPress={() => openSignInModel()}>
                 Sign in
@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
   },
   signUpInputArea: {
     backgroundColor: 'transparent',
-    width: 350,
+    width: 250,
     flex: 0.5,
     top: 20,
     alignItems: 'center',
@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
   signUpTxt: {
     color: 'white',
     fontSize: 16,
-    top: 150,
+    top: 10,
   },
   inputStyle: {
     color: 'white',
