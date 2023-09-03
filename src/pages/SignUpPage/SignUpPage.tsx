@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {ActivityIndicator, Alert, StyleSheet, Text, View} from 'react-native';
 import React, {useState} from 'react';
 import {
   Button,
@@ -7,19 +7,60 @@ import {
   Link,
   NativeBaseProvider,
 } from 'native-base';
+import {createUserWithEmailAndPassword} from 'firebase/auth';
+import {firebase_auth, firestore_db} from '../../firebaseConfig';
+import {addDoc, collection} from 'firebase/firestore';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SignUpPage = ({navigation}: any) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const auth = firebase_auth;
 
   function openSignInModel(): any {
     navigation.navigate('SignInPage');
   }
 
-  function signUpOnAction(): void {
-    console.log('done');
+  async function signUpOnAction(): Promise<void> {
+    setLoading(true);
+    try {
+      if (password === confirmPassword) {
+        const response = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password,
+        );
+
+        const userCollectionRef = collection(firestore_db, 'SignInMembers');
+        await addDoc(userCollectionRef, {
+          name: name,
+          email: email,
+        });
+
+        await AsyncStorage.setItem('userEmail', email);
+
+        console.log(response);
+        navigation.navigate('CharacterList');
+        clearFields;
+      } else {
+        Alert.alert('check your password');
+      }
+    } catch (error: any) {
+      console.log(error);
+      Alert.alert('sign in faild : ' + error.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function clearFields() {
+    setName('');
+    setEmail('');
+    setPassword('');
+    setConfirmPassword('');
   }
 
   return (
@@ -89,14 +130,19 @@ const SignUpPage = ({navigation}: any) => {
               />
             </FormControl>
 
-            <Button
-              mt="2"
-              style={styles.signUpBtn}
-              borderRadius={10}
-              onPress={() => signUpOnAction()}>
-              <Text style={styles.signUpBtnTxt}>Sign up</Text>
-            </Button>
-
+            {loading ? (
+              <ActivityIndicator size={'large'} color={'#0000ff'} />
+            ) : (
+              <>
+                <Button
+                  mt="2"
+                  style={styles.signUpBtn}
+                  borderRadius={10}
+                  onPress={() => signUpOnAction()}>
+                  <Text style={styles.signUpBtnTxt}>Sign up</Text>
+                </Button>
+              </>
+            )}
             <View style={styles.signUpTxtArea}>
               <Text style={styles.signUpTxt}>Have an account.</Text>
               <Link
@@ -139,7 +185,7 @@ const styles = StyleSheet.create({
   },
   signUpInputArea: {
     backgroundColor: 'transparent',
-    width: 250,
+    width: 350,
     flex: 0.5,
     top: 20,
     alignItems: 'center',
