@@ -18,7 +18,7 @@ import {createUserWithEmailAndPassword} from 'firebase/auth';
 import {firebase_auth, firestore_db} from '../../firebaseConfig';
 import {addDoc, collection} from 'firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Platform } from 'react-native';
+import {Platform} from 'react-native';
 
 const SignUpPage = ({navigation}: any) => {
   const [name, setName] = useState('');
