@@ -21,17 +21,6 @@ const CharacterList = ({navigation}: any) => {
       .then(json => setPosts(json));
   }, []);
 
-  // const renderItem = ({item}: any) => (
-  //   <View style={styles.item}>
-  //     <Text style={styles.textContainer}>
-  //       <Text style={styles.itemText}>{item.id}</Text>
-  //       <Text style={styles.spaceText}>... </Text>
-  //       <Text style={styles.itemText}>{item.fullName}</Text>
-  //     </Text>
-  //     <Image source={{uri: item.imageUrl}} style={{width: 80, height: 80}} />
-  //   </View>
-  // );
-
   return (
     <NativeBaseProvider>
       <View>
@@ -51,7 +40,7 @@ const CharacterList = ({navigation}: any) => {
                 </Text>
                 <Image
                   source={{uri: item.imageUrl}}
-                  style={{width: 80, height: 80}}
+                  style={{width: 60, height: 60}}
                 />
               </View>
             ))}
@@ -88,7 +77,7 @@ const styles = StyleSheet.create({
     padding: 20,
     marginVertical: 8,
     marginHorizontal: 12,
-    width: 350,
+    width: 300,
     borderRadius: 10,
   },
   textContainer: {

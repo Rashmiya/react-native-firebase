@@ -2,35 +2,58 @@ import * as React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Dashboard from './src/pages/Dashboard/Dashboard';
+import CharacterList from './src/pages/CharacterList/CharacterList';
+import Profile from './src/pages/Profile/Profile';
 import SignInPage from './src/pages/SignInPage/SignInPage';
 import SignUpPage from './src/pages/SignUpPage/SignUpPage';
-import CharacterList from './src/pages/CharacterList/CharacterList';
+import {User, onAuthStateChanged} from 'firebase/auth';
+import {firebase_auth} from './src/firebaseConfig';
 
 const Stack = createNativeStackNavigator();
+
 const App = () => {
+  const [user, setUser] = React.useState<User | null>(null);
+  React.useEffect(() => {
+    onAuthStateChanged(firebase_auth, user => {
+      console.log('user ', user);
+      setUser(user);
+    });
+  }, []);
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen
-          name="Home"
-          component={Dashboard}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="SignInPage"
-          component={SignInPage}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="SignUpPage"
-          component={SignUpPage}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="CharacterList"
-          component={CharacterList}
-          options={{headerShown: false}}
-        />
+        {user ? (
+          <>
+            <Stack.Screen
+              name="CharacterList"
+              component={CharacterList}
+              options={{headerShown: false}}
+            />
+            <Stack.Screen
+              name="Profile"
+              component={Profile}
+              options={{headerShown: false}}
+            />
+          </>
+        ) : (
+          <>
+            <Stack.Screen
+              name="Home"
+              component={Dashboard}
+              options={{headerShown: false}}
+            />
+            <Stack.Screen
+              name="SignInPage"
+              component={SignInPage}
+              options={{headerShown: false}}
+            />
+            <Stack.Screen
+              name="SignUpPage"
+              component={SignUpPage}
+              options={{headerShown: false}}
+            />
+          </>
+        )}
       </Stack.Navigator>
     </NavigationContainer>
   );
